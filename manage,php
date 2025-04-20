@@ -42,13 +42,20 @@
             <th>Image</th>
             <th>Actions</th>
         </tr>
-        <?php foreach ($cars as $car): ?>
+        <?php
+        // Récupérer toutes les voitures
+        require_once 'db.php';
+        $sql = "SELECT * FROM cars";
+        $stmt = $pdo->query($sql);
+        $cars = $stmt->fetchAll();
+
+        foreach ($cars as $car): ?>
             <tr>
                 <td><?= htmlspecialchars($car['model']) ?></td>
                 <td><?= htmlspecialchars($car['brand']) ?></td>
                 <td><?= htmlspecialchars($car['plate_number']) ?></td>
                 <td><?= htmlspecialchars($car['price_per_day']) ?>€</td>
-                <td><img src="<?= $car['image'] ?>" width="100"></td>
+                <td><img src="<?= $car['image'] ?>" width="100" alt="Image de la voiture"></td>
                 <td>
                     <!-- Modifier une voiture -->
                     <form action="car_actions.php" method="post" style="display:inline;">
