@@ -1,168 +1,96 @@
+<?php
+require_once 'db.php';
+
+// Récupération des voitures
+$sql = "SELECT * FROM cars";
+$stmt = $pdo->query($sql);
+$cars = $stmt->fetchAll();
+
+function findCarImage($car_id) {
+    $extensions = ['jpg', 'jpeg', 'png', 'webp'];
+    foreach ($extensions as $ext) {
+        $path = "uploads/images/{$car_id}.$ext";
+        if (file_exists($path)) {
+            return $path;
+        }
+    }
+    return "uploads/images/default.png"; // image par défaut si rien trouvé
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion de Voitures</title>
+    <title>Liste des voitures</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            display: flex;
-            min-height: 100vh;
-            background-color: #f5f5f5;
-        }
-        
-        .sidebar {
+        .car-card {
+            border: 1px solid #ccc;
+            padding: 10px;
             width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
-        
-        .logo {
+            display: inline-block;
+            margin: 10px;
             text-align: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #34495e;
         }
-        
-        .menu {
-            margin-top: 30px;
+        .car-card img {
+            width: 200px;
+            height: auto;
         }
-        
-        .menu-btn {
-            display: block;
-            width: 100%;
-            padding: 15px 20px;
-            background-color: transparent;
-            border: none;
-            text-align: left;
+        .reserve-btn {
+            margin-top: 10px;
+        }
+        /* Style du menu */
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+        nav a {
             color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .menu-btn:hover, .menu-btn.active {
-            background-color: #34495e;
-        }
-        
-        .menu-btn.active {
-            border-left: 4px solid #3498db;
-        }
-        
-        .menu-btn i {
+            text-decoration: none;
+            padding: 10px 15px;
             margin-right: 10px;
         }
-        
-        .content {
-            flex: 1;
-            padding: 30px;
-        }
-        
-        .welcome-section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        
-        p {
-            color: #7f8c8d;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        .stat-cards {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .stat-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            flex: 1;
-            min-width: 200px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .stat-card h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .stat-card p {
-            font-size: 24px;
-            font-weight: bold;
-            color: #3498db;
-            margin: 0;
+        nav a:hover {
+            background-color: #575757;
         }
     </style>
 </head>
 <body>
-    <!-- Menu latéral à gauche -->
-    <div class="sidebar">
-        <div class="logo">
-            <h2>AutoGestion</h2>
-        </div>
-        <div class="menu">
-            <button class="menu-btn active">
-                <i>🏠</i> Accueil
-            </button>
-            <button class="menu-btn">
-                <i>🚗</i> Gestion de Voiture
-            </button>
-        </div>
+
+<!-- Menu -->
+<nav>
+<a href="cars_display.php">Home</a>
+<a href="manage.php">Cars</a>
+<a href="voir_reservations.php">Reservation</a>
+<a href="logout.php">Logout</a>
+
+</nav>
+
+<h1>voitures disponibles</h1>
+
+<?php foreach ($cars as $car): ?>
+    <div class="car-card">
+        <h3><?= htmlspecialchars($car['brand']) ?> <?= htmlspecialchars($car['model']) ?></h3>
+        <img src="<?= findCarImage($car['id']) ?>" alt="Image Voiture">
+        <p>Plaque : <?= htmlspecialchars($car['plate_number']) ?></p>
+        <p>Prix / jour : <?= htmlspecialchars($car['price_per_day']) ?> €</p>
+
+        <!-- Récupère la prochaine date disponible -->
+        <?php
+        $sql_res = "SELECT MAX(end_date) AS last_date FROM reservations WHERE car_id = ?";
+        $stmt_res = $pdo->prepare($sql_res);
+        $stmt_res->execute([$car['id']]);
+        $last_res = $stmt_res->fetch();
+        $dispo = $last_res['last_date'] ?? date('Y-m-d');
+        ?>
+
+
+        <form method="get" action="reserve.php" class="reserve-btn">
+            <input type="hidden" name="car_id" value="<?= $car['id'] ?>">
+            <button type="submit">Réserver</button>
+        </form>
     </div>
-    
-    <!-- Contenu principal -->
-    <div class="content">
-        <div class="welcome-section">
-            <h1>Bienvenue sur AutoGestion</h1>
-            <p>
-                Système de gestion de parc automobile intelligent et intuitif. Supervisez votre flotte, suivez l'entretien et gérez les réservations en toute simplicité.
-            </p>
-            <p>
-                Utilisez le menu à gauche pour accéder aux différentes fonctionnalités de l'application.
-            </p>
-            
-            <div class="stat-cards">
-                <div class="stat-card">
-                    <h3>Véhicules</h3>
-                    <p>24</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Disponibles</h3>
-                    <p>18</p>
-                </div>
-                <div class="stat-card">
-                    <h3>En maintenance</h3>
-                    <p>3</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Réservés</h3>
-                    <p>3</p>
-                </div>
-            </div>
-        </div>
-    </div>
+<?php endforeach; ?>
+
 </body>
 </html>
