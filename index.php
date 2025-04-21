@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($username === 'admin' && $password === 'admin') {
         // Connexion réussie
         $_SESSION['logged_in'] = true;
-        header("Location: accueil.html");  // Redirection vers accueil.html
+        header("Location: cars_display.php");  // Redirection vers accueil.html
         exit();
     } else {
         $error = "Nom d'utilisateur ou mot de passe incorrect.";
