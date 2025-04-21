@@ -2,7 +2,7 @@
 $host = 'localhost'; // Adresse du serveur MySQL
 $db = 'cars'; // Nom de la base de données
 $user = 'root'; // Nom d'utilisateur de la base de données
-$pass = 'Soufiane@2003'; // Mot de passe de la base de données
+$pass = ''; // Mot de passe de la base de données
 $charset = 'utf8';
 
 // DSN (Data Source Name)
