@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php';  // Connexion à la base de données
+require_once 'db.php';  // Connexion à la base de donnée
 
 // Vérifier si l'ID de la voiture est passé dans l'URL
 if (isset($_GET['car_id'])) {
