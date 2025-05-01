@@ -46,6 +46,7 @@ if (isset($_GET['car_id'])) {
 <head>
     <meta charset="UTF-8">
     <title>Modifier une voiture</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Modifier une voiture</h1>

@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestion des Voitures</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         /* Style du menu */
         nav {
@@ -89,13 +90,13 @@
         // Formulaire de modification
         echo '<form action="edit_car.php" method="get" style="display:inline;">
                 <input type="hidden" name="car_id" value="' . $car['id'] . '">
-                <button type="submit">Modifier</button>
+                <button type="submit" class="btn reserver-btn">Modifier</button>
               </form>';
         // Formulaire de suppression
         echo '<form action="car_actions.php" method="post" style="display:inline;">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="car_id" value="' . $car['id'] . '">
-                <button type="submit">Supprimer</button>
+                <button type="submit" class="btn supprimer-btn">Supprimer</button>
               </form>';
         echo '</td>';
         echo '</tr>';

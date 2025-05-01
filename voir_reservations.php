@@ -27,6 +27,7 @@ $reservations = $stmt->fetchAll();
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <title>Liste des Réservations</title>
     <style>
@@ -80,8 +81,8 @@ $reservations = $stmt->fetchAll();
             <td><?= htmlspecialchars($res['start_date']) ?></td>
             <td><?= htmlspecialchars($res['end_date']) ?></td>
             <td>
-                <a href="modifier_reservation.php?id=<?= $res['reservation_id'] ?>">Modifier</a> |
-                <a href="voir_reservations.php?delete=<?= $res['reservation_id'] ?>" onclick="return confirm('Supprimer cette réservation ?')">Supprimer</a>
+            <a href="modifier_reservation.php?id=<?= $res['reservation_id'] ?>" class="btn reserver-btn">Modifier</a>            |
+            <a href="voir_reservations.php?delete=<?= $res['reservation_id'] ?>" class="btn supprimer-btn" onclick="return confirm('Supprimer cette réservation ?')">Supprimer</a>
             </td>
         </tr>
     <?php endforeach; ?>

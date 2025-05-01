@@ -98,6 +98,7 @@ $price_per_day = $car['price_per_day'];
 <head>
     <meta charset="UTF-8">
     <title>Réserver la voiture</title>
+    <link rel="stylesheet" href="style.css">
     <script>
         function calculerPrix() {
             const start = new Date(document.getElementById("start_date").value);
