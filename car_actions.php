@@ -52,8 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
                     ':car_id' => $car_id
                 ]);
 
-                echo "Voiture ajoutée avec succès !";
-            } else {
+                header("Location: manage.php");
+                exit;
+                            } else {
                 echo "Erreur lors de l'upload de l'image.";
             }
         }
@@ -79,8 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':car_id' => $car_id]);
         
-        echo "Voiture supprimée avec succès !";
-    }
+        header("Location: manage.php");
+        exit;
+            }
     
     // Pour la modification, vous pouvez ajouter une logique similaire
 }
